@@ -2,6 +2,8 @@ import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
 
 /**
  *	coding plan:
@@ -17,6 +19,7 @@ public class adam extends PApplet {
     PFont font;
     PeasyCam cam;
     PImage textFrame;
+    JSONArray passages;
 
     // define the hue and saturation for all 3 axes
     final int X_HUE = 0, X_SAT = 80;
@@ -27,6 +30,15 @@ public class adam extends PApplet {
 
     public static void main(String[] args) {
         PApplet.main(new String[]{adam.class.getName()});
+    }
+
+    // let's load the JSON data
+    public void loadData() {
+        passages = loadJSONArray("data/passages.json");
+
+        for (int i=0; i<passages.size(); i++) {
+            System.out.println(passages.getJSONObject(i).getString("text"));
+        }
     }
 
     @Override
@@ -41,17 +53,11 @@ public class adam extends PApplet {
         frameRate(144);
 
         cam = new PeasyCam(this, 0, 0, 0, 500);
-        font = createFont("gigamarujr.ttf", 14);
+        font = createFont("data/gigamarujr.ttf", 14);
         textFont(font, 14);
 
-        textFrame = loadImage("textFrame.png");
-
-        String hdl;
-        for (int i=0; i<16; i++) {
-            System.out.println(
-                    String.format("Bit(in=in[%d], load=load, out=out[%d])", i, i));
-
-        }
+        textFrame = loadImage("data/textFrame.png");
+        loadData();
     }
 
     @Override
@@ -69,7 +75,7 @@ public class adam extends PApplet {
         final int ENDPOINT = 10000;
         strokeWeight(1);
 
-        // red x axis
+        // red x-axis
         stroke(X_HUE, X_SAT, DIM);
         line(-ENDPOINT, 0, 0, 0, 0, 0);
         stroke(X_HUE, X_SAT, BRIGHT);

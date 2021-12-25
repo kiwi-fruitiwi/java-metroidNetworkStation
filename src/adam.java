@@ -5,6 +5,9 @@ import processing.core.PImage;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *	coding plan:
  *	☒ add peasycam
@@ -19,7 +22,10 @@ public class adam extends PApplet {
     PFont font;
     PeasyCam cam;
     PImage textFrame;
-    JSONArray passages;
+    JSONArray json;
+
+    List<String> passages;
+    List<Integer> durations;
 
     // define the hue and saturation for all 3 axes
     final int X_HUE = 0, X_SAT = 80;
@@ -34,11 +40,20 @@ public class adam extends PApplet {
 
     // let's load the JSON data
     public void loadData() {
-        passages = loadJSONArray("data/passages.json");
+        json = loadJSONArray("data/passages.json");
+        passages = new ArrayList<>();
+        durations = new ArrayList<>();
 
-        for (int i=0; i<passages.size(); i++) {
-            System.out.println(passages.getJSONObject(i).getString("text"));
+        for (int i = 0; i< json.size(); i++) {
+            JSONObject obj = json.getJSONObject(i);
+            passages.add(obj.getString("text"));
+            durations.add(obj.getInt("ms"));
+
+            System.out.println(obj.getJSONArray("highlightIndices"));
         }
+
+        System.out.println(passages);
+        System.out.println(durations);
     }
 
     @Override

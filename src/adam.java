@@ -6,7 +6,6 @@ import processing.data.JSONArray;
 import processing.data.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,7 +34,7 @@ public class adam extends PApplet {
 
     List<String> passages;
     List<Integer> durations;
-    List<List<int[]>> highlightIndicesList;
+    List<List<IndexPair>> highlightIndicesList;
 
     // define the hue and saturation for all 3 axes
     final int X_HUE = 0, X_SAT = 80;
@@ -69,26 +68,25 @@ public class adam extends PApplet {
                 ]
              */
             indexList = obj.getJSONArray("highlightIndices");
-            JSONObject indexPair;
+            JSONObject pair;
 
             // build array of indices that looks like [[52, 66][195, 111]]
             // outer list is "tupleList", inner is "tuple".
             // "tupleList" gets added to highlightIndicesList for each passage
             // highlightIndicesList ➜ [ [], [], [[52, 66][195, 111]], [] ]
-            List<int[]> tupleList = new ArrayList<>();
+            List<IndexPair> tupleList = new ArrayList<>();
 
             // iterate through highlights JSONArray and retrieve tuples
             for (int j = 0; j< indexList.size(); j++) {
-                indexPair = indexList.getJSONObject(j);
+                pair = indexList.getJSONObject(j);
 
-                int[] indices = new int[]{
-                        indexPair.getInt("start"),
-                        indexPair.getInt("end")
-                };
+                IndexPair p = new IndexPair(
+                        pair.getInt("start"),
+                        pair.getInt("end"));
 
                 // 🌟 you can't just print an array. you'll get an object id
                 // System.out.println(Arrays.toString(indices));
-                tupleList.add(indices);
+                tupleList.add(p);
             }
             highlightIndicesList.add(tupleList);
         }

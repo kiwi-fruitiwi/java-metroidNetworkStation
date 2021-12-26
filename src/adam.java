@@ -35,7 +35,7 @@ public class adam extends PApplet {
 
     List<String> passages;
     List<Integer> durations;
-    List<int[]> highlightIndices;
+    List<List<int[]>> highlightIndicesList;
 
     // define the hue and saturation for all 3 axes
     final int X_HUE = 0, X_SAT = 80;
@@ -53,8 +53,8 @@ public class adam extends PApplet {
         json = loadJSONArray("data/passages.json");
         passages = new ArrayList<>();
         durations = new ArrayList<>();
-        highlightIndices = new ArrayList<>();
-        JSONArray highlights;
+        highlightIndicesList = new ArrayList<>();
+        JSONArray indexList;
 
         for (int i = 0; i< json.size(); i++) {
             JSONObject obj = json.getJSONObject(i);
@@ -62,29 +62,40 @@ public class adam extends PApplet {
             passages.add(obj.getString("text"));
             durations.add(obj.getInt("ms"));
 
-            highlights = obj.getJSONArray("highlightIndices");
-            JSONObject highlight;
-            // iterate through highlights JSONArray and retrieve tuples
+            /*  grab highlight indices in this json format:
+                "highlightIndices": [ ⭠ indexList
+                    {"start": 52, "end": 66}, ⭠ indexPair
+                    {"start": 195, "end": 211}
+                ]
+             */
+            indexList = obj.getJSONArray("highlightIndices");
+            JSONObject indexPair;
 
-            for (int j = 0; j< highlights.size(); j++) {
-                highlight = highlights.getJSONObject(j);
+            // build array of indices that looks like [[52, 66][195, 111]]
+            // outer list is "tupleList", inner is "tuple".
+            // "tupleList" gets added to highlightIndicesList for each passage
+            // highlightIndicesList ➜ [ [], [], [[52, 66][195, 111]], [] ]
+            List<int[]> tupleList = new ArrayList<>();
+
+            // iterate through highlights JSONArray and retrieve tuples
+            for (int j = 0; j< indexList.size(); j++) {
+                indexPair = indexList.getJSONObject(j);
+
                 int[] indices = new int[]{
-                        highlight.getInt("start"),
-                        highlight.getInt("end")
+                        indexPair.getInt("start"),
+                        indexPair.getInt("end")
                 };
 
                 // 🌟 you can't just print an array. you'll get an object id
                 // System.out.println(Arrays.toString(indices));
-                highlightIndices.add(indices);
+                tupleList.add(indices);
             }
+            highlightIndicesList.add(tupleList);
         }
 
         System.out.println(passages);
         System.out.println(durations);
-        System.out.println(highlightIndices);
-        for (int[] indices : highlightIndices) {
-            System.out.println(Arrays.toString(indices));
-        }
+        System.out.println(highlightIndicesList);
     }
 
     @Override

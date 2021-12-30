@@ -26,10 +26,9 @@ import java.util.List;
  *  ☐ start adding adam's visualization
  *      ☐ spherical coordinates demo φ θ r! :D
  */
-public class adam extends PApplet {
+public class NetworkStation extends PApplet {
     PFont font;
     PeasyCam cam;
-    PImage textFrame;
     JSONArray json;
 
     List<String> passages;
@@ -43,8 +42,10 @@ public class adam extends PApplet {
     final int DIM = 40; // brightness value for the dimmer negative axis
     final int BRIGHT = 75; // brightness value for the brighter positive axis
 
+    DialogBox dialog;
+
     public static void main(String[] args) {
-        PApplet.main(new String[]{adam.class.getName()});
+        PApplet.main(new String[]{NetworkStation.class.getName()});
     }
 
     // let's load the JSON data
@@ -107,12 +108,11 @@ public class adam extends PApplet {
         colorMode(HSB, 360f, 100f, 100f, 100f);
         frameRate(144);
 
+        loadData();
+        dialog = new DialogBox(this, passages, durations, highlightIndicesList);
         cam = new PeasyCam(this, 0, 0, 0, 500);
         font = createFont("data/gigamarujr.ttf", 14);
         textFont(font, 14);
-
-        textFrame = loadImage("data/textFrame.png");
-        loadData();
     }
 
     @Override
@@ -120,9 +120,8 @@ public class adam extends PApplet {
         background(234, 34, 24);
         drawBlenderAxes();
 
-        cam.beginHUD();
-        image(textFrame, 0, 0, width, height);
-        cam.endHUD();
+        dialog.renderTextFrame(cam);
+        text(passages.get(0), 50, 100);
     }
 
     // draw axes in blender colors, with negative parts less bright

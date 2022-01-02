@@ -54,4 +54,32 @@ public class DialogBox {
         app.image(textFrame, 0, 0, app.width, app.height);
         cam.endHUD();
     }
+
+
+    // advance to the next passage
+    public void nextPassage() {
+        if (passageIndex == passages.size() - 1) {
+            System.out.println("...and we are done! :Sal Khan's voice:");
+        } else {
+            passageIndex++;
+            text = passages.get(passageIndex);
+        }
+    }
+
+
+    // advances the current character in the current passage, but does
+    // nothing if we have reached the end of the passage
+    public void advanceChar() {
+        if (index < text.length() - 1)
+            index++;
+    }
+
+
+    public void renderText(PeasyCam cam) {
+        cam.beginHUD(); // in p5.js, cam.beginHUD(p5._renderer, width, height
+
+
+
+        cam.endHUD();
+    }
 }

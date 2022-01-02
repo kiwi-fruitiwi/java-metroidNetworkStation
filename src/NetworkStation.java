@@ -113,11 +113,13 @@ public class NetworkStation extends PApplet {
         cam = new PeasyCam(this, 0, 0, 0, 500);
         font = createFont("data/gigamarujr.ttf", 14);
         textFont(font, 14);
+
     }
 
     @Override
     public void draw() {
-        background(234, 34, 24);
+        int background = color(234, 34, 24);
+        background(background);
         drawBlenderAxes();
 
         dialog.renderTextFrame(cam);
@@ -146,11 +148,5 @@ public class NetworkStation extends PApplet {
         line(0, 0, -ENDPOINT, 0, 0, 0);
         stroke(Z_HUE, Z_SAT, BRIGHT);
         line(0, 0, 0, 0, 0, ENDPOINT);
-    }
-
-
-    @Override
-    public void mousePressed() {
-        System.out.println(mouseX);
     }
 }
